@@ -1,25 +1,38 @@
 'use strict';
 
-const persone = {
-    name: 'Alex',
-    tel: 55445454544,
-    parent: {
-        mom: 'ala',
-        dad: 'bred'
-    }
-};
+/*AJAX*/
+//1. Неактулаьний спосіб
 
-const a = JSON.stringify(persone); // Обєкт перетворює в Json
-console.log(a);
+const inputUAH = document.querySelector('#uah'),
+      inputUSD = document.querySelector('#usd');
 
-//З сервера приходить JSON і його необхідно перетворити в звичайний об*єкт
-const b = (JSON.parse(JSON.stringify(persone)));
-console.log(b);
+inputUAH.addEventListener('input', () => {
+    //Робимо запит на сервер
+    const request = new XMLHttpRequest();
 
-//ГЛИБОКА КОПІЯ OBJECT
-const clone = JSON.parse(JSON.stringify(persone));
+    request.open('GET', 'current.json'); //Цей метод збирає настройки щоб в майбутньому зробити запит open(method, url, asyn, login, pass)
 
-/*1. JSON.stringify(persone) = перетворить існуючий об*єкт в JSON
-  2. JSON.parse - розпарсить його назад в об*єкт
-  Таким чином створиться клон об*єкта який не буде залежати від попереднього
-  */
+    //Вказуємо що саме ми передаємо
+    request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
+    //Відправляємо запит
+    request.send();
+
+    request.addEventListener('load', () => {
+        if (request.status === 200) {
+            const data = JSON.parse(request.response);
+
+            inputUSD.value = (+inputUAH.value / data.current.usd).toFixed(2);
+        } else {
+            inputUSD.value = 'error';
+        }
+    })
+});
+
+    /*Відповіді від сервера
+
+    status/
+    statusText/
+    response/ відповідь від сервера, то що маємо використовувати
+    readyState/ спрацьовує кілька разів, переходячи з одного епату на інший
+    */
