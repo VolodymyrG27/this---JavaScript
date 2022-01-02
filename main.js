@@ -42,7 +42,7 @@ req.then((product) => {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             product.status = 'order';
-            reject();
+            resolve(product);
         }, 2000);
     });
 }).then(data => {
@@ -52,6 +52,9 @@ req.then((product) => {
     console.log(data);
 }).catch(() => { //Catch працює з reject
     console.error('error');
-});
+}).finally(() => { //finaly ставляться в кінці і маю бути завжди виконані
+    console.log('finally'); //в блок кода finally можна наприклад поставити дію коли очищаємо форму без різниці чи вона відправилась чи ні
+}); 
+
 
 
