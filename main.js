@@ -19,14 +19,34 @@ const req = new Promise(function(resolve, reject) {
             price: 2000
         };
     
-        resolve();
+        resolve(product); //Передаємо product щоб можна було використовувати її за межами(return)
     }, 5000);
-
 }); 
 
 //цей метод виконується на промісі у випадку позитивного результату, then замінить функцію resolve
-req.then(() => {
-    console.log('Дані отримані');
-}); 
+/*
+req.then((product) => {
+    const req2 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+            product.status = 'order';
+            resolve(product);
+        }, 3000);
+    });
+
+    req2.then(data => {
+        console.log(data);
+    })
+}); >>>>*/
+//>>>> скорочений код
+req.then((product) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            product.status = 'order';
+            resolve(product);
+        }, 2000);
+    });
+}).then(data => {
+    console.log(data);
+});
 
 
