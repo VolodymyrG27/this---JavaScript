@@ -42,11 +42,16 @@ req.then((product) => {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             product.status = 'order';
-            resolve(product);
+            reject();
         }, 2000);
     });
 }).then(data => {
+    data.modify = true;
+    return data;
+}).then((data) => {
     console.log(data);
+}).catch(() => { //Catch працює з reject
+    console.error('error');
 });
 
 
