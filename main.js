@@ -1,38 +1,32 @@
 'use strict';
 
-/*AJAX*/
-//1. Неактулаьний спосіб
+//Проміси - обіцянка(полегшує роботу з асинхронними операціями)
 
-const inputUAH = document.querySelector('#uah'),
-      inputUSD = document.querySelector('#usd');
+console.log('Запит даних...');
 
-inputUAH.addEventListener('input', () => {
-    //Робимо запит на сервер
-    const request = new XMLHttpRequest();
+//Створюємо проміси(в середену потрібно помістити колбак функцію)
+/*Аргументи в промісі означають функіїї
+    resolve - щось виконалось правильно, так як очікували
+    reject - не виконалось
+*/
+const req = new Promise(function(resolve, reject) {
 
-    request.open('GET', 'current.json'); //Цей метод збирає настройки щоб в майбутньому зробити запит open(method, url, asyn, login, pass)
+    setTimeout(() => {
+        console.log('Підготовка даних...');
+    
+        const product = {
+            name: 'TV',
+            price: 2000
+        };
+    
+        resolve();
+    }, 5000);
 
-    //Вказуємо що саме ми передаємо
-    request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+}); 
 
-    //Відправляємо запит
-    request.send();
+//цей метод виконується на промісі у випадку позитивного результату, then замінить функцію resolve
+req.then(() => {
+    console.log('Дані отримані');
+}); 
 
-    request.addEventListener('load', () => {
-        if (request.status === 200) {
-            const data = JSON.parse(request.response);
 
-            inputUSD.value = (+inputUAH.value / data.current.usd).toFixed(2);
-        } else {
-            inputUSD.value = 'error';
-        }
-    })
-});
-
-    /*Відповіді від сервера
-
-    status/
-    statusText/
-    response/ відповідь від сервера, то що маємо використовувати
-    readyState/ спрацьовує кілька разів, переходячи з одного епату на інший
-    */
