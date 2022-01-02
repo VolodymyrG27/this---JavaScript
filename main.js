@@ -1,60 +1,29 @@
 'use strict';
 
-//Проміси - обіцянка(полегшує роботу з асинхронними операціями)
-
-console.log('Запит даних...');
-
-//Створюємо проміси(в середену потрібно помістити колбак функцію)
-/*Аргументи в промісі означають функіїї
-    resolve - щось виконалось правильно, так як очікували
-    reject - не виконалось
-*/
-const req = new Promise(function(resolve, reject) {
-
-    setTimeout(() => {
-        console.log('Підготовка даних...');
-    
-        const product = {
-            name: 'TV',
-            price: 2000
-        };
-    
-        resolve(product); //Передаємо product щоб можна було використовувати її за межами(return)
-    }, 5000);
-}); 
-
-//цей метод виконується на промісі у випадку позитивного результату, then замінить функцію resolve
+//Methdos All and Race
+const test = (time) => {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve();
+        }, time);
+    });
+};
 /*
-req.then((product) => {
-    const req2 = new Promise((resolve, reject) => {
-        setTimeout(() => {
-            product.status = 'order';
-            resolve(product);
-        }, 3000);
-    });
+test(1000).then(() => {
+    console.log('1000');
+});
+test(2000).then(() => {
+    console.log('2000');
+});*/
 
-    req2.then(data => {
-        console.log(data);
-    })
-}); >>>>*/
-//>>>> скорочений код
-req.then((product) => {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            product.status = 'order';
-            resolve(product);
-        }, 2000);
-    });
-}).then(data => {
-    data.modify = true;
-    return data;
-}).then((data) => {
-    console.log(data);
-}).catch(() => { //Catch працює з reject
-    console.error('error');
-}).finally(() => { //finaly ставляться в кінці і маю бути завжди виконані
-    console.log('finally'); //в блок кода finally можна наприклад поставити дію коли очищаємо форму без різниці чи вона відправилась чи ні
-}); 
+//Метод all  служить для того щоб ми точно впевнились що всі проміси вже виконались(запити на різні сервера щоб отримати фото) і ми чекаємо всі відповіді від сервера і вже потім щось робити з ними
 
+Promise.all([test(1000), test(2000)]).then(() => {
+    console.log('All');
+});
 
+//Method race дії навпаки, а саме коли само перший проміс виконався тоді метод race починає працювати
 
+Promise.race([test(1000), test(2000)]).then(() => {
+    console.log('All');
+});
